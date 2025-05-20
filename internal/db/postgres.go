@@ -50,3 +50,13 @@ func FetchTotalInventory() (models.TotalInventory, error) {
 
 	return inventoryTotal, nil
 }
+
+func CreateBin(binName string) (models.Bin, error) {
+	const query = `INSERT INTO bins (bin_name) VALUES ($1) RETURNING id, bin_name`
+	var bin models.Bin
+	err := db.QueryRow(query, binName).Scan(&bin.ID, &bin.Name)
+	if err != nil {
+		return models.Bin{}, fmt.Errorf("failed to insert bin: %w", err)
+	}
+	return bin, nil
+}

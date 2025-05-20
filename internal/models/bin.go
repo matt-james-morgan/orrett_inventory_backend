@@ -7,3 +7,8 @@ type TotalBins struct {
 type TotalInventory struct {
 	Total int `json:"total_inventory"`
 }
+
+type Bin struct {
+	Name string `json:"name"`
+	ID   int    `json:"id"`
+}
