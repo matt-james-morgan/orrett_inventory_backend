@@ -1,13 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"orrett_backend/internal/db"
-
-	"github.com/rs/cors"
+	handlers "orrett_backend/internal/http"
 )
 
 type TotalBins struct {
@@ -17,26 +15,14 @@ type TotalBins struct {
 func main() {
 	fmt.Println("running")
 
-	db.SetUp()
+	dbConn := db.SetUp() // your SetUp returns *sql.DB
+	defer dbConn.Close()
 
-	mux := http.NewServeMux()
+	db.SetDB(dbConn)
 
-	mux.HandleFunc("/", getTotalBinsHandler)
+	log.Println("Query executed")
 
-	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000"},
-		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},
-		AllowCredentials: true,
-	})
-	handler := c.Handler(mux)
+	handler := handlers.NewRouter()
 
 	log.Fatal(http.ListenAndServe(":8080", handler))
-}
-
-func getTotalBinsHandler(w http.ResponseWriter, r *http.Request) {
-	data := TotalBins{}
-	data.TotalBins = 100 // Example value, replace with actual logic to get total bins
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(data)
 }

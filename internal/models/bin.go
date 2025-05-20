@@ -1,6 +1,9 @@
 package models
 
 type TotalBins struct {
-	ID    int `json:"id"`
-	Total int `json:"total"`
+	Total int `json:"total_bins"`
+}
+
+type TotalInventory struct {
+	Total int `json:"total_inventory"`
 }

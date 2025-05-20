@@ -5,6 +5,10 @@ import (
 	"orrett_backend/internal/models"
 )
 
-func GetTotalBins() ([]models.TotalBins, error) {
+func GetTotalBins() (models.TotalBins, error) {
 	return db.FetchTotalBins()
+}
+
+func GetTotalInventory() (models.TotalInventory, error) {
+	return db.FetchTotalInventory()
 }
