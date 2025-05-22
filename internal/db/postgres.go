@@ -11,24 +11,25 @@ var db *sql.DB
 func SetDB(database *sql.DB) {
 	db = database
 }
-func FetchTotalBins() (models.TotalBins, error) {
-	rows, err := db.Query("SELECT COUNT(id) as total FROM bins")
+func FetchBins() ([]models.Bin, error) {
+	rows, err := db.Query("SELECT bin_name, id FROM bins")
 	if err != nil {
-		return models.TotalBins{}, err
+		return []models.Bin{}, err
 	}
+	fmt.Println(rows, "rows")
 	defer rows.Close()
 
-	var binTotal models.TotalBins
+	var bins []models.Bin
 
-	if rows.Next() {
-		if err := rows.Scan(&binTotal.Total); err != nil {
-			return models.TotalBins{}, err
+	for rows.Next() {
+		var bin models.Bin
+		if err := rows.Scan(&bin.Name, &bin.ID); err != nil {
+			return []models.Bin{}, err
 		}
-	} else {
-		return models.TotalBins{}, fmt.Errorf("no rows returned")
+		bins = append(bins, bin)
 	}
 
-	return binTotal, nil
+	return bins, nil
 }
 
 func FetchTotalInventory() (models.TotalInventory, error) {

@@ -12,8 +12,8 @@ import (
 func NewRouter() http.Handler {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/totalBins", getTotalBinsHandler)
-	mux.HandleFunc("/totalInventory", getTotalInventoryHandler)
+	mux.HandleFunc("/bins", getTotalBinsHandler)
+	mux.HandleFunc("/totalInventory", getBinsHandler)
 	mux.HandleFunc("/createBin", createBin)
 
 	c := cors.New(cors.Options{
@@ -37,8 +37,8 @@ func getTotalBinsHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(data)
 }
 
-func getTotalInventoryHandler(w http.ResponseWriter, r *http.Request) {
-	data, err := service.GetTotalInventory()
+func getBinsHandler(w http.ResponseWriter, r *http.Request) {
+	data, err := service.GetTotalBins()
 	if err != nil {
 		http.Error(w, "Failed to fetch total inventory", http.StatusInternalServerError)
 		return
