@@ -9,6 +9,7 @@ type TotalInventory struct {
 }
 
 type Bin struct {
-	Name string `json:"name"`
-	ID   int    `json:"id"`
+	Name        string `json:"bin_name"`
+	ID          int    `json:"id"`
+	Description string `json:"description"`
 }

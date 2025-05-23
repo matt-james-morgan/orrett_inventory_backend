@@ -12,18 +12,17 @@ func SetDB(database *sql.DB) {
 	db = database
 }
 func FetchBins() ([]models.Bin, error) {
-	rows, err := db.Query("SELECT bin_name, id FROM bins")
+	rows, err := db.Query("SELECT bin_name, description, id FROM bins")
 	if err != nil {
 		return []models.Bin{}, err
 	}
-	fmt.Println(rows, "rows")
 	defer rows.Close()
 
 	var bins []models.Bin
 
 	for rows.Next() {
 		var bin models.Bin
-		if err := rows.Scan(&bin.Name, &bin.ID); err != nil {
+		if err := rows.Scan(&bin.Name, &bin.Description, &bin.ID); err != nil {
 			return []models.Bin{}, err
 		}
 		bins = append(bins, bin)
@@ -52,10 +51,10 @@ func FetchTotalInventory() (models.TotalInventory, error) {
 	return inventoryTotal, nil
 }
 
-func CreateBin(binName string) (models.Bin, error) {
-	const query = `INSERT INTO bins (bin_name) VALUES ($1) RETURNING id, bin_name`
+func CreateBin(binName, description string) (models.Bin, error) {
+	const query = `INSERT INTO bins (bin_name, description) VALUES ($1, $2) RETURNING id, bin_name, description`
 	var bin models.Bin
-	err := db.QueryRow(query, binName).Scan(&bin.ID, &bin.Name)
+	err := db.QueryRow(query, binName, description).Scan(&bin.ID, &bin.Name, &bin.Description)
 	if err != nil {
 		return models.Bin{}, fmt.Errorf("failed to insert bin: %w", err)
 	}

@@ -63,7 +63,8 @@ func SetUp() *sql.DB {
 
 	_, err = db.Exec(`CREATE TABLE bins (
 		id SERIAL PRIMARY KEY,
-		bin_name TEXT UNIQUE
+		bin_name TEXT UNIQUE,
+		description TEXT DEFAULT ''
 	)`)
 	if err != nil {
 		log.Fatalf("Failed to create bins: %v", err)

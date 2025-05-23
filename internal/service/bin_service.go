@@ -13,6 +13,6 @@ func GetTotalInventory() (models.TotalInventory, error) {
 	return db.FetchTotalInventory()
 }
 
-func CreateBin(bin_name string) (models.Bin, error) {
-	return db.CreateBin(bin_name)
+func CreateBin(bin_name, description string) (models.Bin, error) {
+	return db.CreateBin(bin_name, description)
 }

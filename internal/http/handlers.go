@@ -51,7 +51,8 @@ func getBinsHandler(w http.ResponseWriter, r *http.Request) {
 
 func createBin(w http.ResponseWriter, r *http.Request) {
 	type CreateBinRequest struct {
-		BinName string `json:"bin_name"`
+		BinName     string `json:"bin_name"`
+		Description string `json:"description"`
 	}
 
 	var req CreateBinRequest
@@ -64,7 +65,8 @@ func createBin(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bin_name is required", http.StatusBadRequest)
 		return
 	}
-	data, err := service.CreateBin(req.BinName)
+
+	data, err := service.CreateBin(req.BinName, req.Description)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "Failed to create bin", http.StatusInternalServerError)
