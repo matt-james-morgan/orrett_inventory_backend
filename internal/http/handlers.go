@@ -14,7 +14,8 @@ func NewRouter() http.Handler {
 
 	mux.HandleFunc("/bins", getTotalBinsHandler)
 	mux.HandleFunc("/totalInventory", getBinsHandler)
-	mux.HandleFunc("/createBin", createBin)
+	mux.HandleFunc("/create/bin", createBin)
+	mux.HandleFunc("/create/item", createItem)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000"},
@@ -70,6 +71,44 @@ func createBin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "Failed to create bin", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusAccepted)
+	json.NewEncoder(w).Encode(data)
+}
+
+func createItem(w http.ResponseWriter, r *http.Request) {
+	type CreateItemRequest struct {
+		ItemName    string `json:"item_name"`
+		Description string `json:"description"`
+		BinId       string `json:"bin_id"`
+	}
+
+	var req CreateItemRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	if req.BinId == "" {
+		http.Error(w, "bin_id is required", http.StatusBadRequest)
+		return
+	}
+	if req.Description == "" {
+		http.Error(w, "description is required", http.StatusBadRequest)
+		return
+	}
+	if req.ItemName == "" {
+		http.Error(w, "item_name is required", http.StatusBadRequest)
+		return
+	}
+
+	data, err := service.CreateItem(req.ItemName, req.Description, req.BinId)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "Failed to create item", http.StatusInternalServerError)
 		return
 	}
 

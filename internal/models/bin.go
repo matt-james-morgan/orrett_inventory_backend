@@ -13,3 +13,10 @@ type Bin struct {
 	ID          int    `json:"id"`
 	Description string `json:"description"`
 }
+
+type Item struct {
+	ItemName    string `json:"item_name"`
+	ID          int    `json:"id"`
+	Description string `json:"description"`
+	BinName     string `json:"bin_name"`
+}

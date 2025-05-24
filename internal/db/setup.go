@@ -54,8 +54,10 @@ func SetUp() *sql.DB {
 
 	// Create table if not exists
 	_, err = db.Exec(`CREATE TABLE inventory (
+		id SERIAL PRIMARY KEY,
 		item_name TEXT UNIQUE,
-		bin_id INTEGER
+		bin_id TEXT,
+		description TEXT
 	)`)
 	if err != nil {
 		log.Fatalf("Failed to create table: %v", err)

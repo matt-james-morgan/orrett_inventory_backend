@@ -60,3 +60,13 @@ func CreateBin(binName, description string) (models.Bin, error) {
 	}
 	return bin, nil
 }
+
+func CreateItem(item_name, description, bin_name string) (models.Item, error) {
+	const query = `INSERT INTO inventory (item_name, bin_id, description) VALUES ($1, $2, $3) RETURNING id, item_name, bin_id, description`
+	var item models.Item
+	err := db.QueryRow(query, item_name, bin_name, description).Scan(&item.ID, &item.ItemName, &item.BinName, &item.Description)
+	if err != nil {
+		return models.Item{}, fmt.Errorf("failed to insert bin: %w", err)
+	}
+	return item, nil
+}
