@@ -31,24 +31,24 @@ func FetchBins() ([]models.Bin, error) {
 	return bins, nil
 }
 
-func FetchTotalInventory() (models.TotalInventory, error) {
-	rows, err := db.Query("SELECT COUNT(item_name) as total FROM inventory")
+func FetchTotalItems() (models.TotalItems, error) {
+	rows, err := db.Query("SELECT COUNT(item_name) as total FROM items")
 	if err != nil {
-		return models.TotalInventory{}, err
+		return models.TotalItems{}, err
 	}
 	defer rows.Close()
 
-	var inventoryTotal models.TotalInventory
+	var itemsTotal models.TotalItems
 
 	if rows.Next() {
-		if err := rows.Scan(&inventoryTotal.Total); err != nil {
-			return models.TotalInventory{}, err
+		if err := rows.Scan(&itemsTotal.Total); err != nil {
+			return models.TotalItems{}, err
 		}
 	} else {
-		return models.TotalInventory{}, fmt.Errorf("no rows returned")
+		return models.TotalItems{}, fmt.Errorf("no rows returned")
 	}
 
-	return inventoryTotal, nil
+	return itemsTotal, nil
 }
 
 func CreateBin(binName, description string) (models.Bin, error) {
@@ -62,7 +62,7 @@ func CreateBin(binName, description string) (models.Bin, error) {
 }
 
 func CreateItem(item_name, description, bin_name string) (models.Item, error) {
-	const query = `INSERT INTO inventory (item_name, bin_id, description) VALUES ($1, $2, $3) RETURNING id, item_name, bin_id, description`
+	const query = `INSERT INTO items (item_name, bin_id, description) VALUES ($1, $2, $3) RETURNING id, item_name, bin_id, description`
 	var item models.Item
 	err := db.QueryRow(query, item_name, bin_name, description).Scan(&item.ID, &item.ItemName, &item.BinName, &item.Description)
 	if err != nil {

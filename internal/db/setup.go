@@ -42,7 +42,7 @@ func SetUp() *sql.DB {
 		log.Fatalf("Failed to connect to new DB: %v", err)
 	}
 
-	_, err = db.Exec("DROP TABLE IF EXISTS inventory")
+	_, err = db.Exec("DROP TABLE IF EXISTS items")
 	if err != nil {
 		log.Fatalf("Failed to drop table: %v", err)
 	}
@@ -52,8 +52,13 @@ func SetUp() *sql.DB {
 		log.Fatalf("Failed to drop table: %v", err)
 	}
 
+	_, err = db.Exec("DROP TABLE IF EXISTS inventory")
+	if err != nil {
+		log.Fatalf("Failed to drop table: %v", err)
+	}
+
 	// Create table if not exists
-	_, err = db.Exec(`CREATE TABLE inventory (
+	_, err = db.Exec(`CREATE TABLE items (
 		id SERIAL PRIMARY KEY,
 		item_name TEXT UNIQUE,
 		bin_id TEXT,
@@ -73,7 +78,7 @@ func SetUp() *sql.DB {
 	}
 
 	// Insert sample data
-	_, err = db.Exec(`INSERT INTO inventory (item_name, bin_id) VALUES 
+	_, err = db.Exec(`INSERT INTO items (item_name, bin_id) VALUES 
 		('Screwdriver', 1), 
 		('Hammer', 2), 
 		('Wrench', 1)`)

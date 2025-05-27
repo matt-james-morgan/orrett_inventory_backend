@@ -9,8 +9,8 @@ func GetTotalBins() ([]models.Bin, error) {
 	return db.FetchBins()
 }
 
-func GetTotalInventory() (models.TotalInventory, error) {
-	return db.FetchTotalInventory()
+func GetTotalItems() (models.TotalItems, error) {
+	return db.FetchTotalItems()
 }
 
 func CreateBin(bin_name, description string) (models.Bin, error) {

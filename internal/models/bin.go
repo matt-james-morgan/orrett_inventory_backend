@@ -1,22 +1,22 @@
 package models
 
 type TotalBins struct {
-	Total int `json:"total_bins"`
+	Total int `json:"totalBins"`
 }
 
-type TotalInventory struct {
-	Total int `json:"total_inventory"`
+type TotalItems struct {
+	Total int `json:"totalItems"`
 }
 
 type Bin struct {
-	Name        string `json:"bin_name"`
+	Name        string `json:"binName"`
 	ID          int    `json:"id"`
 	Description string `json:"description"`
 }
 
 type Item struct {
-	ItemName    string `json:"item_name"`
+	ItemName    string `json:"itemName"`
 	ID          int    `json:"id"`
 	Description string `json:"description"`
-	BinName     string `json:"bin_name"`
+	BinName     string `json:"binName"`
 }

@@ -13,7 +13,7 @@ func NewRouter() http.Handler {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/bins", getTotalBinsHandler)
-	mux.HandleFunc("/totalInventory", getBinsHandler)
+	mux.HandleFunc("/totalItems", getItemsHandler)
 	mux.HandleFunc("/create/bin", createBin)
 	mux.HandleFunc("/create/item", createItem)
 
@@ -38,10 +38,10 @@ func getTotalBinsHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(data)
 }
 
-func getBinsHandler(w http.ResponseWriter, r *http.Request) {
-	data, err := service.GetTotalBins()
+func getItemsHandler(w http.ResponseWriter, r *http.Request) {
+	data, err := service.GetTotalItems()
 	if err != nil {
-		http.Error(w, "Failed to fetch total inventory", http.StatusInternalServerError)
+		http.Error(w, "Failed to fetch total items", http.StatusInternalServerError)
 		return
 	}
 
@@ -52,7 +52,7 @@ func getBinsHandler(w http.ResponseWriter, r *http.Request) {
 
 func createBin(w http.ResponseWriter, r *http.Request) {
 	type CreateBinRequest struct {
-		BinName     string `json:"bin_name"`
+		BinName     string `json:"binName"`
 		Description string `json:"description"`
 	}
 
@@ -81,9 +81,9 @@ func createBin(w http.ResponseWriter, r *http.Request) {
 
 func createItem(w http.ResponseWriter, r *http.Request) {
 	type CreateItemRequest struct {
-		ItemName    string `json:"item_name"`
+		ItemName    string `json:"itemName"`
 		Description string `json:"description"`
-		BinId       string `json:"bin_id"`
+		BinId       string `json:"binId"`
 	}
 
 	var req CreateItemRequest
