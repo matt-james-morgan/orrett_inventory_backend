@@ -18,7 +18,7 @@ func NewRouter() http.Handler {
 	mux.HandleFunc("/create/item", createItem)
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},
 		AllowCredentials: true,
 	})
@@ -29,6 +29,7 @@ func NewRouter() http.Handler {
 func getTotalBinsHandler(w http.ResponseWriter, r *http.Request) {
 	data, err := service.GetTotalBins()
 	if err != nil {
+		fmt.Println(err)
 		http.Error(w, "Failed to fetch total bins", http.StatusInternalServerError)
 		return
 	}

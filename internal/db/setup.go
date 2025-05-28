@@ -61,7 +61,7 @@ func SetUp() *sql.DB {
 	_, err = db.Exec(`CREATE TABLE items (
 		id SERIAL PRIMARY KEY,
 		item_name TEXT UNIQUE,
-		bin_id TEXT,
+		bin_id INT,
 		description TEXT
 	)`)
 	if err != nil {

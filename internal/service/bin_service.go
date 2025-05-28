@@ -18,5 +18,5 @@ func CreateBin(bin_name, description string) (models.Bin, error) {
 }
 
 func CreateItem(item_name, description, bin_id string) (models.Item, error) {
-	return db.CreateItem(item_name, description, bin_id)
+	return db.CreateItem(item_name, bin_id)
 }
