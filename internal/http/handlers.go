@@ -82,9 +82,8 @@ func createBin(w http.ResponseWriter, r *http.Request) {
 
 func createItem(w http.ResponseWriter, r *http.Request) {
 	type CreateItemRequest struct {
-		ItemName    string `json:"itemName"`
-		Description string `json:"description"`
-		BinId       string `json:"binId"`
+		ItemName string `json:"itemName"`
+		BinId    int    `json:"binId"`
 	}
 
 	var req CreateItemRequest
@@ -93,20 +92,17 @@ func createItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.BinId == "" {
+	if req.BinId == 0 {
 		http.Error(w, "bin_id is required", http.StatusBadRequest)
 		return
 	}
-	if req.Description == "" {
-		http.Error(w, "description is required", http.StatusBadRequest)
-		return
-	}
+
 	if req.ItemName == "" {
 		http.Error(w, "item_name is required", http.StatusBadRequest)
 		return
 	}
 
-	data, err := service.CreateItem(req.ItemName, req.Description, req.BinId)
+	data, err := service.CreateItem(req.ItemName, req.BinId)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "Failed to create item", http.StatusInternalServerError)

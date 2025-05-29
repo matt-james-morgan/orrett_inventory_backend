@@ -9,14 +9,15 @@ type TotalItems struct {
 }
 
 type Bin struct {
-	Name        string `json:"binName"`
+	Name        string `json:"name"`
 	ID          int    `json:"id"`
 	Description string `json:"description"`
 	Items       []Item `json:"items"`
 }
 
 type Item struct {
-	ItemName    string `json:"itemName"`
+	Name        string `json:"name"`
 	ID          int    `json:"id"`
 	Description string `json:"description"`
+	BinId       string `json:"binId"`
 }

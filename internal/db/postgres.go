@@ -20,13 +20,13 @@ func FetchBins() ([]models.Bin, error) {
     		bins.bin_name, 
     		bins.description, 
     		items.id AS item_id, 
-    		items.item_name,
+    		items.item_name
 		FROM bins
 		LEFT JOIN items ON bins.id = items.bin_id
 		ORDER BY bins.id
 		`)
 	if err != nil {
-		slog.Warn("error forming query")
+		slog.Warn("error forming fetch bins query")
 		return nil, err
 	}
 	defer rows.Close()
@@ -59,8 +59,8 @@ func FetchBins() ([]models.Bin, error) {
 
 		if itemID.Valid {
 			bin.Items = append(bin.Items, models.Item{
-				ID:       int(itemID.Int64),
-				ItemName: itemName.String,
+				ID:   int(itemID.Int64),
+				Name: itemName.String,
 			})
 		}
 	}
@@ -104,10 +104,10 @@ func CreateBin(binName, description string) (models.Bin, error) {
 	return bin, nil
 }
 
-func CreateItem(item_name, bin_name string) (models.Item, error) {
-	const query = `INSERT INTO items (item_name, bin_id) VALUES ($1, $2, $3) RETURNING id, item_name, bin_id`
+func CreateItem(item_name string, bin_id int) (models.Item, error) {
+	const query = `INSERT INTO items (item_name, bin_id) VALUES ($1, $2) RETURNING id, item_name, bin_id`
 	var item models.Item
-	err := db.QueryRow(query, item_name, bin_name).Scan(&item.ID, &item.ItemName)
+	err := db.QueryRow(query, item_name, bin_id).Scan(&item.ID, &item.Name, &item.BinId)
 	if err != nil {
 		return models.Item{}, fmt.Errorf("failed to insert bin: %w", err)
 	}
