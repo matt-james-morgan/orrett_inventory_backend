@@ -1,10 +1,7 @@
 package http
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
-	"orrett_backend/internal/service"
 
 	"github.com/rs/cors"
 )
@@ -12,10 +9,13 @@ import (
 func NewRouter() http.Handler {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/bins", getTotalBinsHandler)
-	mux.HandleFunc("/totalItems", getItemsHandler)
-	mux.HandleFunc("/create/bin", createBin)
-	mux.HandleFunc("/create/item", createItem)
+	mux.HandleFunc("/bins", GetTotalBinsHandler)
+	mux.HandleFunc("/create/bin", CreateBin)
+	mux.HandleFunc("/delete/bin", DeleteBin)
+
+	mux.HandleFunc("/totalItems", GetItemsHandler)
+	mux.HandleFunc("/create/item", CreateItem)
+	mux.HandleFunc("/delete/item", DeleteItemHandler)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
@@ -24,92 +24,4 @@ func NewRouter() http.Handler {
 	})
 	handler := c.Handler(mux)
 	return handler
-}
-
-func getTotalBinsHandler(w http.ResponseWriter, r *http.Request) {
-	data, err := service.GetTotalBins()
-	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "Failed to fetch total bins", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(data)
-}
-
-func getItemsHandler(w http.ResponseWriter, r *http.Request) {
-	data, err := service.GetTotalItems()
-	if err != nil {
-		http.Error(w, "Failed to fetch total items", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(data)
-}
-
-func createBin(w http.ResponseWriter, r *http.Request) {
-	type CreateBinRequest struct {
-		BinName     string `json:"binName"`
-		Description string `json:"description"`
-	}
-
-	var req CreateBinRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid JSON", http.StatusBadRequest)
-		return
-	}
-
-	if req.BinName == "" {
-		http.Error(w, "bin_name is required", http.StatusBadRequest)
-		return
-	}
-
-	data, err := service.CreateBin(req.BinName, req.Description)
-	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "Failed to create bin", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusAccepted)
-	json.NewEncoder(w).Encode(data)
-}
-
-func createItem(w http.ResponseWriter, r *http.Request) {
-	type CreateItemRequest struct {
-		ItemName string `json:"itemName"`
-		BinId    int    `json:"binId"`
-	}
-
-	var req CreateItemRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid JSON", http.StatusBadRequest)
-		return
-	}
-
-	if req.BinId == 0 {
-		http.Error(w, "bin_id is required", http.StatusBadRequest)
-		return
-	}
-
-	if req.ItemName == "" {
-		http.Error(w, "item_name is required", http.StatusBadRequest)
-		return
-	}
-
-	data, err := service.CreateItem(req.ItemName, req.BinId)
-	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "Failed to create item", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusAccepted)
-	json.NewEncoder(w).Encode(data)
 }

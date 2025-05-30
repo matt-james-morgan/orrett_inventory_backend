@@ -113,3 +113,50 @@ func CreateItem(item_name string, bin_id int) (models.Item, error) {
 	}
 	return item, nil
 }
+
+func DeleteItem(item_id int) (bool, error) {
+	const query = `DELETE FROM items WHERE id = $1`
+
+	result, err := db.Exec(query, item_id)
+	if err != nil {
+		return false, fmt.Errorf("failed to delete item: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return false, fmt.Errorf("failed to check rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return false, fmt.Errorf("no item found with id %d", item_id)
+	}
+
+	return true, nil
+}
+
+func DeleteBin(bin_id int) (bool, error) {
+	const query = `DELETE FROM bins WHERE id = $1`
+
+	// Delete the bin itself
+	result, err := db.Exec(query, bin_id)
+	if err != nil {
+		return false, fmt.Errorf("failed to delete bin: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return false, fmt.Errorf("failed to check bin rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return false, fmt.Errorf("no bin found with id %d", bin_id)
+	}
+
+	const itemQuery = `DELETE FROM items WHERE bin_id = $1`
+	_, err = db.Exec(itemQuery, bin_id)
+	if err != nil {
+		return false, fmt.Errorf("failed to delete items for bin: %w", err)
+	}
+
+	return true, nil
+}

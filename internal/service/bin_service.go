@@ -20,3 +20,11 @@ func CreateBin(bin_name, description string) (models.Bin, error) {
 func CreateItem(item_name string, bin_id int) (models.Item, error) {
 	return db.CreateItem(item_name, bin_id)
 }
+
+func DeleteItem(item_id int) (bool, error) {
+	return db.DeleteItem(item_id)
+}
+
+func DeleteBin(bin_id int) (bool, error) {
+	return db.DeleteBin(bin_id)
+}
