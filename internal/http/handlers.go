@@ -17,6 +17,8 @@ func NewRouter() http.Handler {
 	mux.HandleFunc("/create/item", CreateItem)
 	mux.HandleFunc("/delete/item", DeleteItemHandler)
 
+	mux.HandleFunc("/signin", SignIn)
+
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},

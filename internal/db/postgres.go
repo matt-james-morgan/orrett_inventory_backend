@@ -135,7 +135,7 @@ func DeleteItem(item_id int) (bool, error) {
 }
 
 func DeleteBin(bin_id int) (bool, error) {
-	const query = `DELETE FROM bins WHERE id = $1`
+	query := `DELETE FROM bins WHERE id = $1`
 
 	// Delete the bin itself
 	result, err := db.Exec(query, bin_id)
@@ -159,4 +159,15 @@ func DeleteBin(bin_id int) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func SignIn(user_name string) (string, error) {
+	query := `SELECT password_hash FROM users WHERE user_name = $1`
+	var password_hash string
+
+	err := db.QueryRow(query, user_name).Scan(&password_hash)
+	if err != nil {
+		return "", fmt.Errorf("user Not Found, %w", err)
+	}
+	return password_hash, nil
 }

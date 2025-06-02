@@ -28,3 +28,7 @@ func DeleteItem(item_id int) (bool, error) {
 func DeleteBin(bin_id int) (bool, error) {
 	return db.DeleteBin(bin_id)
 }
+
+func SignIn(user_name string) (string, error) {
+	return db.SignIn(user_name)
+}
