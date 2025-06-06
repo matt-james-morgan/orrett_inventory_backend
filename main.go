@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"orrett_backend/internal/db"
@@ -13,7 +12,6 @@ type TotalBins struct {
 }
 
 func main() {
-	fmt.Println("running")
 
 	dbConn := db.SetUp() // your SetUp returns *sql.DB
 	defer dbConn.Close()

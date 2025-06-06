@@ -42,7 +42,6 @@ func FetchBins() ([]models.Bin, error) {
 
 		if err := rows.Scan(&binID, &binName, &description, &itemID, &itemName); err != nil {
 			slog.Warn("error scanning")
-			fmt.Println("error scanning")
 			return []models.Bin{}, err
 		}
 

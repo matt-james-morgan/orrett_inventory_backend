@@ -2,7 +2,6 @@ package http
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"orrett_backend/internal/service"
 
@@ -42,7 +41,6 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
 		return
 	}
-	fmt.Println("Sending back true")
 	// On success, return JSON (for now, just a simple success message)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(true)
